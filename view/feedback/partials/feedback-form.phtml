@@ -1,0 +1,18 @@
+<div class="alert alert-success hidden" id="feedback-sent">
+    Thank you for writing to us
+</div>
+
+<form role="form" id="footer-form" class="feedback-form">
+    <div class="form-group">
+        <input placeholder="<?= $this->translate('Your Name'); ?>" id="name" name="name" class="form-control input-md" type="text">
+    </div>
+    <div class="form-group">
+        <input placeholder="<?= $this->translate('Your email@address.com'); ?>" id="email" name="email" class="form-control input-md" type="text">
+    </div>
+    <div class="form-group">
+        <textarea rows="10" id="message" name="message" placeholder="<?= $this->translate('Your message*...'); ?>" class="form-control input-md"></textarea>
+    </div>
+    <button type="button" class="btn btn-default" id="send"><?= $this->translate('Send'); ?></button>
+</form>
+
+<?php $this->headScript()->appendFile($this->basePath() . '/js/feedback/feedback.js'); ?>

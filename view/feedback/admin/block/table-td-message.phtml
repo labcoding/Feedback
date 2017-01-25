@@ -1,0 +1,14 @@
+<?php
+/** @var \Zend\View\Model\ViewModel $viewModel */
+$viewModel = $this->viewModel()->getCurrent();
+
+$value = $viewModel->getVariable('value');
+$maxLength = $viewModel->getVariable('stringLength');
+?>
+
+<td>
+    <?= mb_substr($value, 0, $maxLength); ?>
+    <?php if(mb_strlen($value) > $maxLength): ?>
+        ...
+    <?php endif; ?>
+</td>

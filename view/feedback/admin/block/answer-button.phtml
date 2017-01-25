@@ -1,0 +1,87 @@
+<?php
+/** @var \Zend\View\Model\ViewModel $viewModel */
+$viewModel = $this->viewModel()->getCurrent();
+
+$color = $viewModel->getVariable('color', 'default');
+$size = $viewModel->getVariable('size');
+if ($size !== null) {
+    $size = "btn-$size";
+}
+$icon = $viewModel->getVariable('icon');
+$text = $viewModel->getVariable('text', 'Default');
+
+$values = $viewModel->getVariable('values');
+$target = "feedback-answer-{$values['id']}";
+
+?>
+
+<?php if($values['status'] == \LabCoding\Feedback\Domain\Feedback::STATUS_ANSWERED): ?>
+    <span class="btn btn-primary btn-xs disabled">
+        <?php if ($icon !== null): ?>
+            <i class="fa fa-<?= $icon ?>"></i>
+        <?php endif; ?>
+        <?= $text ?>
+    </span>
+<?php else: ?>
+    <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#<?= $target; ?>">
+        <?php if ($icon !== null): ?>
+            <i class="fa fa-<?= $icon ?>"></i>
+        <?php endif; ?>
+        <?= $text ?>
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="<?= $target; ?>" tabindex="-1" role="dialog" aria-labelledby="<?= $target; ?>">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="<?= $this->translate('Close'); ?>"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><?= $this->translate('The answer to feedback'); ?></h4>
+                </div>
+                <div class="modal-body">
+                    <blockquote>
+                        <div class="mailbox-read-info">
+                            <?php if(!empty($values['name'])): ?>
+                                <h5>
+                                    <strong><?= $this->translate('Sender'); ?>:</strong> <?= $values['name']; ?>
+                                </h5>
+                            <?php endif; ?>
+                            <h5>
+                                <strong><?= $this->translate('Email'); ?>:</strong>
+                                <?php if(!empty($values['name'])): ?>
+                                    <?= $values['email']; ?>
+                                <?php else: ?>
+                                    <span class="help-block" style="display: inline;"><?= $this->translate("User don't left email address"); ?></span>
+                                <?php endif; ?>
+                            </h5>
+                        </div>
+                        <div class="mailbox-read-message">
+                            <span class="mailbox-read-time pull-right">
+                                <?= $values['createdDt']; ?>
+                            </span>
+                            <br />
+                            <p><?= $values['message']; ?></p>
+                        </div>
+                    </blockquote>
+
+                    <?php if(!empty($values['email'])): ?>
+                        <form role="form" action="<?= $this->url('admin-feedback-answer', ['id' => $values['id']]); ?>" class="answer-feedback-form">
+                            <div class="form-group">
+                                <label><?= $this->translate('Text answer'); ?>*</label>
+                                <textarea placeholder="<?= $this->translate('Text answer'); ?>" rows="3" class="form-control" name="answer"></textarea>
+                            </div>
+                        </form>
+                    <?php endif; ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><?= $this->translate('Cancel'); ?></button>
+                    <?php if(!empty($values['email'])): ?>
+                        <button type="button" class="btn btn-primary send-answer"><?= $this->translate('Send'); ?></button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php $this->headScript()->appendFile($this->basePath() . '/js/module/feedback/answer.js'); ?>
+<?php endif; ?>

@@ -1,0 +1,33 @@
+{
+  "name": "labcoding/feedback",
+  "description": "ZF2 feedback Module",
+  "type": "library",
+  "license": "BSD-3-Clause",
+  "keywords": ["zf2", "feedback", "feedback crud", "feedback form", "feedback module"],
+  "homepage": "https://github.com/labcoding/feedback",
+  "authors": [
+    {
+      "name": "D Bogdanovich",
+      "email": "d.bogdanovich@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+
+    "zendframework/zend-db": "~2.5.0",
+    "zendframework/zend-mvc": "~2.5.0",
+    "zendframework/zend-servicemanager": "~2.5.0",
+
+    "t4web/infrastructure": "~1.2.0",
+    "t4web/domain-module": "~1.2.0",
+    "t4web/crud": "~1.0.0"
+  },
+  "suggest": {
+    "t4web/admin": "for showing in admin"
+  },
+  "autoload": {
+    "psr-4": {
+      "LabCoding\\Feedback\\": "src/"
+    }
+  }
+}

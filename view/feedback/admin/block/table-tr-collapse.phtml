@@ -1,0 +1,44 @@
+<?php
+/** @var \Zend\View\Model\ViewModel $viewModel */
+$viewModel = $this->viewModel()->getCurrent();
+$tdViews = $viewModel->getChildrenByCaptureTo('table-td');
+$trCollapseViews = $viewModel->getChildrenByCaptureTo('table-tr-collapse');
+?>
+
+<tr><?php foreach ($tdViews as $view) echo $this->render($view) ?></tr>
+<?php foreach ($trCollapseViews as $view): ?>
+
+    <?php
+        $target = $view->getVariable('target');
+        $values = $view->getVariable('values');
+    ?>
+    <tr>
+        <td colspan="100" style="margin: 0; padding: 0">
+            <div class="collapse" id="<?= $target; ?>">
+                <div class="well">
+                    <div class="mailbox-read-info">
+                        <?php if(!empty($values['name'])): ?>
+                            <h5>
+                                <strong>Sender Name:</strong>
+                                <?= $values['name']; ?>
+                            </h5>
+                        <?php endif; ?>
+                        <span class="mailbox-read-time pull-right">
+                            <?= $values['createdDt']; ?>
+                        </span>
+                        <?php if(!empty($values['email'])): ?>
+                            <h5>
+                                <strong>Email:</strong>
+                                <?= $values['email']; ?>
+                            </h5>
+                        <?php endif; ?>
+                    </div>
+                    <div class="mailbox-read-message">
+                        <?= $values['message']; ?>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+<?php endforeach; ?>
+
