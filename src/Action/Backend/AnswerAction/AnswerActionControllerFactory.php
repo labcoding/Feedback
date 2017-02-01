@@ -4,7 +4,6 @@ namespace LabCoding\Feedback\Action\Backend\AnswerAction;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use LabCoding\Feedback\ViewModel\JsonViewModel;
 use Zend\EventManager\EventManager;
 
 class AnswerActionControllerFactory implements FactoryInterface
@@ -24,9 +23,9 @@ class AnswerActionControllerFactory implements FactoryInterface
         $id = (int)$routeMatch->getParam('id');
 
         $request = $serviceLocator->get('Request');
-        $inputFilter = $serviceLocator->get(AnswerInputFilter::class);
+        $inputFilter = $serviceLocator->get('LabCoding\Feedback\InputFilter\AnswerInputFilter');
         $repository = $serviceLocator->get('Feedback\Infrastructure\Repository');
-        $viewModel = $serviceLocator->get(JsonViewModel::class);
+        $viewModel = $serviceLocator->get('LabCoding\Feedback\ViewModel\JsonViewModel');
         $eventManager = new EventManager();
 
         return new AnswerActionController($id, $request, $inputFilter, $repository, $viewModel, $eventManager);

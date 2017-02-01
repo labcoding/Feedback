@@ -1,6 +1,6 @@
 <?php
 
-namespace LabCoding\Feedback\Action\Frontend\SendAction;
+namespace LabCoding\Feedback\InputFilter;
 
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\Input;

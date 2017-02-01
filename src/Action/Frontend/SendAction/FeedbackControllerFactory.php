@@ -4,7 +4,6 @@ namespace LabCoding\Feedback\Action\Frontend\SendAction;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use LabCoding\Feedback\ViewModel\JsonViewModel;
 use Zend\EventManager\EventManager;
 
 class FeedbackControllerFactory implements FactoryInterface
@@ -21,11 +20,11 @@ class FeedbackControllerFactory implements FactoryInterface
         $serviceLocator = $serviceLocator->getServiceLocator();
 
         $request = $serviceLocator->get('Request');
-        $inputFilter = $serviceLocator->get(SendInputFilter::class);
-        $repository = $serviceLocator->get('Feedback\Infrastructure\Repository');
-        $viewModel = $serviceLocator->get(JsonViewModel::class);
+        $inputFilter = $serviceLocator->get('LabCoding\Feedback\InputFilter\SendInputFilter');
+        $serviceCreator = $serviceLocator->get('Feedback\Service\Creator');
+        $viewModel = $serviceLocator->get('LabCoding\Feedback\ViewModel\JsonViewModel');
         $eventManager = new EventManager();
 
-        return new FeedbackController($request, $inputFilter, $repository, $viewModel, $eventManager);
+        return new FeedbackController($request, $inputFilter, $serviceCreator, $viewModel, $eventManager);
     }
 }

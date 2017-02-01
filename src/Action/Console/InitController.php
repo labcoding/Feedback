@@ -1,47 +1,63 @@
 <?php
 
-namespace T4web\Log\Action\Console;
+namespace LabCoding\Feedback\Action\Console;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Console\Request as ConsoleRequest;
-use Zend\Mvc\MvcEvent;
-use Zend\Db\Adapter\Adapter as DbAdapter;
-use T4web\Migrations\Exception\RuntimeException;
+use Zend\Mvc\Controller\AbstractConsoleController;
+use Zend\Db\Adapter\Adapter;
 
-class InitController extends AbstractActionController
+class InitController extends AbstractConsoleController
 {
     /**
-     * @var DbAdapter
+     * @var Adapter
      */
     private $dbAdapter;
 
-    public function __construct(DbAdapter $dbAdapter)
+    /**
+     * @var array
+     */
+    private $config;
+
+    /**
+     * InitController constructor.
+     * @param Adapter $dbAdapter
+     * @param array $config
+     */
+    public function __construct(Adapter $dbAdapter, array $config)
     {
         $this->dbAdapter = $dbAdapter;
+        $this->config = $config;
     }
 
-    public function onDispatch(MvcEvent $e)
+    /**
+     * @return string
+     */
+    public function runAction()
     {
-        if (!$e->getRequest() instanceof ConsoleRequest) {
-            throw new RuntimeException('You can only use this action from a console!');
+        if (!isset($this->config['entity_map']['Feedback']['table'])) {
+            throw new \RuntimeException('entity_map config not found');
         }
+        $table = $this->config['entity_map']['Feedback']['table'];
 
-        $query = "CREATE TABLE IF NOT EXISTS `logs` (
-              `id` INT(11) NOT NULL AUTO_INCREMENT,
-              `message` VARCHAR(300) DEFAULT NULL,
-              `scope` TINYINT NOT NULL,
-              `priority` TINYINT NOT NULL,
-              `extras` TEXT DEFAULT NULL,
-              `created_dt` datetime NOT NULL,
-              `updated_dt` datetime DEFAULT NULL,
-              PRIMARY KEY (`id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
+        $query = "CREATE TABLE IF NOT EXISTS `$table` (
+                    `id` int(11) NOT NULL AUTO_INCREMENT,
+                    `name` VARCHAR(50) DEFAULT NULL,
+                    `email` VARCHAR(100) DEFAULT NULL,
+                    `message` TEXT,
+                    `answer` TEXT NULL,
+                    `created_dt` DATETIME NOT NULL,
+                    `updated_dt` DATETIME NOT NULL,
+                    `status` TINYINT(1) DEFAULT 1, 
+                    PRIMARY KEY (`id`) 
+                  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
 
         try {
-            $this->dbAdapter->query($query, DbAdapter::QUERY_MODE_EXECUTE);
+            $this->dbAdapter->query($query, Adapter::QUERY_MODE_EXECUTE);
+
+            return "Feedback module initialized successfully" . PHP_EOL;
         } catch (\Exception $e) {
-            // currently there are no db-independent way to check if table exists
-            // so we assume that table exists when we catch exception
+            return
+                $e->getMessage() . PHP_EOL .
+                $e->getTraceAsString() . PHP_EOL;
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace LabCoding\Feedback\Action\Backend\AnswerAction;
+namespace LabCoding\Feedback\InputFilter;
 
 use Zend\InputFilter\InputFilter;
 use Zend\Validator\Db\NoRecordExists;

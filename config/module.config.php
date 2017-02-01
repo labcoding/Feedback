@@ -2,29 +2,29 @@
 
 namespace LabCoding\Feedback;
 
-use LabCoding\Feedback;
 use LabCoding\Feedback\Action;
+use LabCoding\Feedback\InputFilter;
+use LabCoding\Feedback\ViewModel\JsonViewModelFactory;
 
 return [
 
-    'entity_map' => require __DIR__ . '/entity_map.config.php',
-    't4web-crud' => include 't4web-crud.config.php',
-    'sebaks-view' => array_merge_recursive(
-        include 'view-backend.config.php'
-    ),
+    'entity_map' => require_once __DIR__ . '/entity_map.config.php',
+    't4web-crud' => require_once 't4web-crud.config.php',
+    'sebaks-view' => require_once 'view-backend.config.php',
 
     'service_manager' => [
         'factories' => [
-            Feedback\ViewModel\JsonViewModel::class => Feedback\ViewModel\JsonViewModelFactory::class,
+            'LabCoding\Feedback\ViewModel\JsonViewModel' => JsonViewModelFactory::class,
         ],
         'invokables' => [
-            Action\Frontend\SendAction\SendInputFilter::class => Action\Frontend\SendAction\SendInputFilter::class,
-            Action\Backend\AnswerAction\AnswerInputFilter::class => Action\Backend\AnswerAction\AnswerInputFilter::class,
+            'LabCoding\Feedback\InputFilter\SendInputFilter' => InputFilter\SendInputFilter::class,
+            'LabCoding\Feedback\InputFilter\AnswerInputFilter' => InputFilter\AnswerInputFilter::class,
         ]
     ],
 
     'controllers' => [
         'factories' => [
+            Action\Console\InitController::class => Action\Console\InitControllerFactory::class,
             Action\Backend\AnswerAction\AnswerActionController::class => Action\Backend\AnswerAction\AnswerActionControllerFactory::class,
             Action\Frontend\SendAction\FeedbackController::class => Action\Frontend\SendAction\FeedbackControllerFactory::class,
         ],
@@ -51,6 +51,22 @@ return [
                 ],
             ],
         ]
+    ],
+
+    'console' => [
+        'router' => [
+            'routes' => [
+                'feedback-init' => [
+                    'options' => [
+                        'route' => 'feedback init',
+                        'defaults' => [
+                            'controller' => Action\Console\InitController::class,
+                            'action' => 'run'
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ],
 
     'view_manager' => [

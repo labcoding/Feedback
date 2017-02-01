@@ -1,10 +1,9 @@
 <?php
 
-namespace T4web\Log\Action\Console;
+namespace LabCoding\Feedback\Action\Console;
 
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use T4web\Migrations\Config;
 
 class InitControllerFactory implements FactoryInterface
 {
@@ -12,11 +11,9 @@ class InitControllerFactory implements FactoryInterface
     {
         $serviceLocator = $controllerManager->getServiceLocator();
 
-        /** @var Config $class */
-        $class = $serviceLocator->get(Config::class);
-
         return new InitController(
-            $serviceLocator->get($class->getAdapter())
+            $serviceLocator->get('Zend\Db\Adapter\Adapter'),
+            $serviceLocator->get('Config')
         );
     }
 }

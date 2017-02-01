@@ -3,14 +3,14 @@
 namespace LabCoding\Feedback\ViewModel;
 
 use Zend\View\Model\JsonModel;
-use Zend\Http\PhpEnvironment\Response;
+use Zend\Stdlib\ResponseInterface;
 use T4webDomain\Entity;
 
 class JsonViewModel extends JsonModel
 {
 
     /**
-     * @return Response
+     * @return ResponseInterface
      */
     public function getResponse()
     {
@@ -31,7 +31,7 @@ class JsonViewModel extends JsonModel
     public function setResult($result)
     {
         if ($result instanceof Entity) {
-            $result = $result->extract();
+            $result = $result->extract(['name', 'email', 'message']);
         }
 
         $this->setVariable('result', $result);

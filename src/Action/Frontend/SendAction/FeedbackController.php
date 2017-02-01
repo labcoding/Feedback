@@ -5,7 +5,7 @@ namespace LabCoding\Feedback\Action\Frontend\SendAction;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Stdlib\RequestInterface;
 use Zend\InputFilter\InputFilterInterface;
-use T4webDomainInterface\Infrastructure\RepositoryInterface;
+use T4webDomainInterface\ServiceInterface;
 use LabCoding\Feedback\ViewModel\JsonViewModel;
 use Zend\EventManager\EventManagerInterface;
 use Zend\Mvc\MvcEvent;
@@ -21,9 +21,9 @@ class FeedbackController extends AbstractActionController
     protected $inputFilter;
 
     /**
-     * @var RepositoryInterface
+     * @var ServiceInterface
      */
-    protected $repository;
+    protected $serviceCreator;
 
     /**
      * @var JsonViewModel
@@ -40,21 +40,21 @@ class FeedbackController extends AbstractActionController
      *
      * @param RequestInterface $request
      * @param InputFilterInterface $inputFilter
-     * @param RepositoryInterface $repository
+     * @param ServiceInterface $serviceCreator
      * @param JsonViewModel $viewModel
      * @param EventManagerInterface $eventManager
      */
     public function __construct(
         RequestInterface $request,
         InputFilterInterface $inputFilter,
-        RepositoryInterface $repository,
+        ServiceInterface $serviceCreator,
         JsonViewModel $viewModel,
         EventManagerInterface $eventManager
     )
     {
         $this->request = $request;
         $this->inputFilter = $inputFilter;
-        $this->repository = $repository;
+        $this->serviceCreator = $serviceCreator;
         $this->viewModel = $viewModel;
         $this->eventManager = $eventManager;
 
@@ -82,9 +82,7 @@ class FeedbackController extends AbstractActionController
             return $this->viewModel;
         }
 
-        $entity = new Feedback($this->inputFilter->getValues());
-
-        $result = $this->repository->add($entity);
+        $result = $this->serviceCreator->handle([], $this->inputFilter->getValues());
 
         if ($result instanceof Feedback) {
             $event = new FeedbackEvent(
