@@ -3,14 +3,14 @@
 namespace LabCoding\Feedback\ViewModel;
 
 use Zend\View\Model\JsonModel;
-use Zend\Stdlib\ResponseInterface;
+use Zend\Http\Response;
 use T4webDomain\Entity;
 
 class JsonViewModel extends JsonModel
 {
 
     /**
-     * @return ResponseInterface
+     * @return Response
      */
     public function getResponse()
     {
